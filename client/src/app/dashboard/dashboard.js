@@ -17,15 +17,18 @@ angular.module('dashboard', ['resources.projects', 'resources.tasks'])
   });
 }])
 
-.controller('DashboardCtrl', ['$scope', '$location', 'projects', 'tasks', function ($scope, $location, projects, tasks) {
-  $scope.projects = projects;
-  $scope.tasks = tasks;
+.controller('DashboardCtrl', [
+          '$scope','$location','projects','tasks',
+  function($scope,  $location,  projects,  tasks) {
+    $scope.projects = projects;
+    $scope.tasks = tasks;
 
-  $scope.manageBacklog = function (projectId) {
-    $location.path('/projects/' + projectId + '/productbacklog');
-  };
+    $scope.manageBacklog = function (projectId) {
+      $location.path('/projects/' + projectId + '/productbacklog');
+    };
 
-  $scope.manageSprints = function (projectId) {
-    $location.path('/projects/' + projectId + '/sprints');
-  };
-}]);
+    $scope.manageSprints = function (projectId) {
+      $location.path('/projects/' + projectId + '/sprints');
+    };
+  }
+]);

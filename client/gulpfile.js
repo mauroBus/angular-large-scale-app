@@ -13,9 +13,13 @@ var _ = require('lodash');
 
 var package = require('./package.json');
 
+var less = require('gulp-less'); // less compiler.
+var path = require('path');
+var livereload = require('gulp-livereload');
+
 
 /***** Task: Build Index *****/
-gulp.task('build-index', function () {
+gulp.task('build-index', function() {
   return gulp.src('src/index.html')
     .pipe(template({
       pkg: package,
@@ -25,7 +29,7 @@ gulp.task('build-index', function () {
 });
 
 /***** Task: Build JS *****/
-gulp.task('build-js', function () {
+gulp.task('build-js', function() {
   var now = new Date();
 
   var htmlMinOpts = {
@@ -65,8 +69,24 @@ gulp.task('build-js', function () {
     .pipe(gulp.dest('dist'));
 });
 
+
+/***** Task: Less to Build Css *****/
+gulp.task('build-css', function() {
+  return gulp.src([
+      './src/assets/less/app.less',
+      './src/app/**/*.less'
+    ])
+    .pipe(less({
+      paths: [ path.join(__dirname, 'less', 'includes') ]
+    }))
+    .pipe(concat('styles.css'))
+    .pipe(gulp.dest('dist/css'))
+    .pipe(livereload());
+});
+
+
 /***** Task: Copy Static *****/
-gulp.task('copy-static', function () {
+gulp.task('copy-static', function() {
   return merge(
     gulp.src('vendor/bootstrap-css/css/*.css').pipe(gulp.dest('dist/css')),
     gulp.src('vendor/bootstrap-css/fonts/*').pipe(gulp.dest('dist/fonts')),
@@ -85,30 +105,33 @@ gulp.task('copy-static', function () {
 });
 
 /***** Task: Clean *****/
-gulp.task('clean', function (done) {
+gulp.task('clean', function(done) {
   return rimraf('dist', done);
 });
 
 /***** Task: Lint *****/
-gulp.task('lint', function () {
+gulp.task('lint', function() {
   return gulp.src(['src/**/*.js', 'test/unit/**/*.js']).pipe(jshint())
     .pipe(jshint.reporter('default'))
     .pipe(jshint.reporter('fail'));
 });
 
 /***** Task: Watch *****/
-gulp.task('watch', ['lint', 'build'], function () {
+gulp.task('watch', ['lint', 'build'], function() {
   gulp.watch('src/**/*.js', ['lint', 'build-js']);
   gulp.watch('src/**/*.tpl.html', ['build-js']);
   gulp.watch('src/index.html', ['build-index']);
-  gulp.watch('src/assets/**/*.*', ['copy-static']);
+  gulp.watch(['src/assets/**/*.*', '!src/assets/less/*.less'], ['copy-static']);
+  gulp.watch('src/assets/less/*.less', ['build-css']);
+  gulp.watch('src/app/**/*.less', ['build-css']);
 });
 
 /***** Task: Build *****/
 gulp.task('build', [
   'copy-static',
   'build-index',
-  'build-js'
+  'build-js',
+  'build-css'
 ]);
 
 /***** Task: Default *****/
