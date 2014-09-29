@@ -1,19 +1,19 @@
 {
   "author": "Mauro Buselli",
   "name": "angular-large-arch-xmpl",
-  "homepage": "https://github.com/mauroBus/angular-large-arch-xmpl",
+  "homepage": "https://github.com/mauroBus/angular-large-scale-app",
   "version": "0.1.0",
   "engines": {
     "node": ">= 0.10.32"
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:mauroBus/angular-large-arch-xmpl.git"
+    "url": "git@github.com:mauroBus/angular-large-scale-app.git"
   },
   "licenses": [
     {
       "type": "MIT",
-      "url": "https://raw.github.com/mauroBus/angular-large-arch-xmpl/master/LICENSE"
+      "url": "https://raw.github.com/mauroBus/angular-large-scale-app/master/LICENSE"
     }
   ],
   "dependencies": {},
