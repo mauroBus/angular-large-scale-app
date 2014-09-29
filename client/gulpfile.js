@@ -80,8 +80,7 @@ gulp.task('build-css', function() {
       paths: [ path.join(__dirname, 'less', 'includes') ]
     }))
     .pipe(concat('styles.css'))
-    .pipe(gulp.dest('dist/css'))
-    .pipe(livereload());
+    .pipe(gulp.dest('dist/css'));
 });
 
 
@@ -118,12 +117,19 @@ gulp.task('lint', function() {
 
 /***** Task: Watch *****/
 gulp.task('watch', ['lint', 'build'], function() {
+  livereload.listen(12345);
   gulp.watch('src/**/*.js', ['lint', 'build-js']);
   gulp.watch('src/**/*.tpl.html', ['build-js']);
   gulp.watch('src/index.html', ['build-index']);
   gulp.watch(['src/assets/**/*.*', '!src/assets/less/*.less'], ['copy-static']);
-  gulp.watch('src/assets/less/*.less', ['build-css']);
-  gulp.watch('src/app/**/*.less', ['build-css']);
+  gulp.watch([
+      'src/assets/less/*.less',
+      'src/app/**/*.less'
+    ],
+    [
+      'build-css'
+    ])
+    .on('change', livereload.changed);
 });
 
 /***** Task: Build *****/
