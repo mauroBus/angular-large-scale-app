@@ -1,0 +1,33 @@
+{
+  "author": "Mauro Buselli",
+  "name": "angular-large-arch-xmpl",
+  "homepage": "https://github.com/mauroBus/angular-large-arch-xmpl",
+  "version": "0.1.0",
+  "engines": {
+    "node": ">= 0.10.32"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:mauroBus/angular-large-arch-xmpl.git"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://raw.github.com/mauroBus/angular-large-arch-xmpl/master/LICENSE"
+    }
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "lodash": "~2.4.1",
+    "merge-stream": "~0.1.6",
+    "rimraf": "~2.2.8",
+    "gulp": "~3.8.8",
+    "gulp-concat": "~2.4.1",
+    "gulp-angular-templatecache": "~1.4.1",
+    "gulp-uglify": "~1.0.1",
+    "gulp-jshint": "~1.8.5",
+    "gulp-template": "~1.1.0",
+    "gulp-header": "~1.1.1",
+    "gulp-htmlmin": "~0.2.0"
+  }
+}

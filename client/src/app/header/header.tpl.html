@@ -1,0 +1,45 @@
+<div ng-controller="HeaderCtrl">
+    <div class="navbar navbar-default" role="navigation">
+        <div class="navbar-header">
+            <a class="navbar-brand" ng-click="home()">AScrum</a>
+        </div>
+        <div>
+            <ul class="nav navbar-nav" ng-show="isAuthenticated()">
+                <li>
+                    <a href="/projects">My Projects</a>
+                </li>
+                <li class="dropdown">
+                    <a id="adminmenu" role="button" class="dropdown-toggle">Admin</a>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="adminmenu">
+                        <li>
+                            <a tabindex="-1" href="/admin/users">Manage Users</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <login-toolbar></login-toolbar>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="#">
+                        <img src="/static/img/spinner.gif">
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div>
+        <ul class="breadcrumb">
+            <li ng-repeat="breadcrumb in breadcrumbs">
+                <span class="divider">/</span>
+                <ng-switch on="$last">
+                    <span ng-switch-when="true">{{breadcrumb.name}}</span>
+                    <span ng-switch-default>
+                        <a href="{{breadcrumb.path}}">{{breadcrumb.name}}</a>
+                    </span>
+                </ng-switch>
+            </li>
+        </ul>
+    </div>
+</div>
