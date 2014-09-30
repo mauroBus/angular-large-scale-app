@@ -10,12 +10,25 @@ var htmlmin = require('gulp-htmlmin');
 var merge = require('merge-stream');
 var rimraf = require('rimraf');
 var _ = require('lodash');
-
 var package = require('./package.json');
 
 var less = require('gulp-less'); // less compiler.
 var path = require('path');
 var livereload = require('gulp-livereload');
+var minifyCss = require('gulp-minify-css');
+var gulpIf = require('gulp-if');
+var argv = require('yargs').argv;
+var rename = require('gulp-rename');
+
+
+// General Config:
+var config = {
+  jsName: 'index',
+  dist: 'dist',
+  jsDist: 'dist/js',
+  cssDist: 'dist/css',
+  fontsDist: 'dist/fonts'
+};
 
 
 /***** Task: Build Index *****/
@@ -23,9 +36,11 @@ gulp.task('build-index', function() {
   return gulp.src('src/index.html')
     .pipe(template({
       pkg: package,
-      year: new Date()
+      year: new Date(),
+      production: argv.production,
+      mainJsName: config.jsName
     }))
-    .pipe(gulp.dest('dist'));
+    .pipe(gulp.dest(config.dist));
 });
 
 /***** Task: Build JS *****/
@@ -52,10 +67,7 @@ gulp.task('build-js', function() {
             module: 'templates.common'
           }))
     )
-    .pipe(concat(package.name + '.js'))
-    // .pipe(uglify(package.name + '.js', {
-    //   mangle: false
-    // }))
+    .pipe(concat(config.jsName + '.js'))
     .pipe(header(
         '/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - <%= buildDate %>\n' +
         '<%= pkg.homepage ? " * " + pkg.homepage + "\\n" : "" %>' +
@@ -66,7 +78,11 @@ gulp.task('build-js', function() {
         buildDate: now,
         copyrightYear: now.getFullYear()
       }))
-    .pipe(gulp.dest('dist'));
+    .pipe(gulpIf(argv.production, uglify(config.jsName + '.js', {
+        mangle: false
+      })))
+    .pipe(gulpIf(argv.production, rename({suffix: '.min'})))
+    .pipe(gulp.dest(config.jsDist));
 });
 
 
@@ -76,21 +92,20 @@ gulp.task('build-css', function() {
       './src/assets/less/app.less',
       './src/app/**/*.less'
     ])
-    .pipe(less({
-      paths: [ path.join(__dirname, 'less', 'includes') ]
-    }))
     .pipe(concat('styles.css'))
-    .pipe(gulp.dest('dist/css'));
+    .pipe(less()) // {paths: [ path.join(__dirname, 'less', 'includes') ]}
+    .pipe(gulpIf( argv.production, minifyCss({keepBreaks:true}) ))
+    .pipe(gulp.dest(config.cssDist));
 });
 
 
 /***** Task: Copy Static *****/
 gulp.task('copy-static', function() {
   return merge(
-    gulp.src('vendor/bootstrap-css/css/*.css').pipe(gulp.dest('dist/css')),
-    gulp.src('vendor/bootstrap-css/fonts/*').pipe(gulp.dest('dist/fonts')),
+    gulp.src('vendor/bootstrap-css/css/*.css').pipe(gulp.dest(config.cssDist)),
+    gulp.src('vendor/bootstrap-css/fonts/*').pipe(gulp.dest(config.fontsDist)),
+    gulp.src(['src/assets/**/*.*', '!src/assets/less/*.*']).pipe(gulp.dest(config.dist)),
     merge(
-      gulp.src('src/assets/**/*.*'),
       gulp.src([
           'vendor/angular/angular.js',
           'vendor/angular-route/angular-route.js'
@@ -99,13 +114,13 @@ gulp.task('copy-static', function() {
       gulp.src('vendor/angular-bootstrap/ui-bootstrap-tpls.js'),
       gulp.src('vendor/jquery/dist/jquery.js'),
       gulp.src('vendor/angularjs-mongolab/src/*.js')
-    ).pipe(gulp.dest('dist'))
+    ).pipe(gulp.dest(config.jsDist))
   );
 });
 
 /***** Task: Clean *****/
 gulp.task('clean', function(done) {
-  return rimraf('dist', done);
+  return rimraf(config.dist, done);
 });
 
 /***** Task: Lint *****/
@@ -134,6 +149,7 @@ gulp.task('watch', ['lint', 'build'], function() {
 
 /***** Task: Build *****/
 gulp.task('build', [
+  'clean',
   'copy-static',
   'build-index',
   'build-js',
@@ -150,6 +166,4 @@ gulp.task('default', [
 /*
 TODO:
 - watch shouldn't break on errors
-- don't uglify / HTML minifiy during watch
-- live-reload
  */
