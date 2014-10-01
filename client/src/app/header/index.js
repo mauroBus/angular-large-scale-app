@@ -1,5 +1,5 @@
 angular.module('app')
-.controller('HeaderCtrl',[
+.controller('HeaderCtrl', [
            '$scope','$location','$route',
   function ($scope,  $location,  $route) {
     $scope.location = $location;

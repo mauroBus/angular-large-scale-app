@@ -19,6 +19,7 @@ var minifyCss = require('gulp-minify-css');
 var gulpIf = require('gulp-if');
 var argv = require('yargs').argv;
 var rename = require('gulp-rename');
+var runSequence = require('run-sequence');
 
 
 // General Config:
@@ -32,7 +33,7 @@ var config = {
 
 
 /***** Task: Build Index *****/
-gulp.task('build-index', ['clean'], function() {
+gulp.task('build-index', function() {
   return gulp.src('src/index.html')
     .pipe(template({
       pkg: package,
@@ -45,7 +46,7 @@ gulp.task('build-index', ['clean'], function() {
 
 
 /***** Task: Build JS *****/
-gulp.task('build-js', ['clean'], function() {
+gulp.task('build-js', function() {
   var now = new Date();
 
   var htmlMinOpts = {
@@ -88,7 +89,7 @@ gulp.task('build-js', ['clean'], function() {
 
 
 /***** Task: Less to Build Css *****/
-gulp.task('build-css', ['clean'], function() {
+gulp.task('build-css', function() {
   return gulp.src([
       './src/assets/less/app.less',
       './src/app/**/*.less'
@@ -101,7 +102,7 @@ gulp.task('build-css', ['clean'], function() {
 
 
 /***** Task: Copy Static *****/
-gulp.task('copy-static', ['clean'], function() {
+gulp.task('copy-static', function() {
   return merge(
     gulp.src('vendor/bootstrap-css/css/*.css')
         .pipe(gulp.dest(config.cssDist)),
@@ -130,7 +131,7 @@ gulp.task('clean', function(done) {
 
 
 /***** Task: Lint *****/
-gulp.task('lint', ['clean'], function() {
+gulp.task('lint', function() {
   return gulp.src('src/**/*.js')
     .pipe(jshint())
     .pipe(jshint.reporter('default'))
@@ -161,12 +162,15 @@ gulp.task('watch', ['lint', 'build'], function() {
 
 
 /***** Task: Build *****/
-gulp.task('build', [
-  'copy-static',
-  'build-index',
-  'build-js',
-  'build-css'
-]);
+gulp.task('build', function(cbk) {
+  return runSequence('clean', [
+    'copy-static',
+    'build-index',
+    'build-js',
+    'build-css'
+  ],
+  cbk);
+});
 
 
 /***** Task: Default *****/
