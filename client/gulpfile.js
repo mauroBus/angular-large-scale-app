@@ -32,7 +32,7 @@ var config = {
 
 
 /***** Task: Build Index *****/
-gulp.task('build-index', function() {
+gulp.task('build-index', ['clean'], function() {
   return gulp.src('src/index.html')
     .pipe(template({
       pkg: package,
@@ -43,8 +43,9 @@ gulp.task('build-index', function() {
     .pipe(gulp.dest(config.dist));
 });
 
+
 /***** Task: Build JS *****/
-gulp.task('build-js', function() {
+gulp.task('build-js', ['clean'], function() {
   var now = new Date();
 
   var htmlMinOpts = {
@@ -87,7 +88,7 @@ gulp.task('build-js', function() {
 
 
 /***** Task: Less to Build Css *****/
-gulp.task('build-css', function() {
+gulp.task('build-css', ['clean'], function() {
   return gulp.src([
       './src/assets/less/app.less',
       './src/app/**/*.less'
@@ -100,11 +101,14 @@ gulp.task('build-css', function() {
 
 
 /***** Task: Copy Static *****/
-gulp.task('copy-static', function() {
+gulp.task('copy-static', ['clean'], function() {
   return merge(
-    gulp.src('vendor/bootstrap-css/css/*.css').pipe(gulp.dest(config.cssDist)),
-    gulp.src('vendor/bootstrap-css/fonts/*').pipe(gulp.dest(config.fontsDist)),
-    gulp.src(['src/assets/**/*.*', '!src/assets/less/*.*']).pipe(gulp.dest(config.dist)),
+    gulp.src('vendor/bootstrap-css/css/*.css')
+        .pipe(gulp.dest(config.cssDist)),
+    gulp.src('vendor/bootstrap-css/fonts/*')
+        .pipe(gulp.dest(config.fontsDist)),
+    gulp.src(['src/assets/**/*.*', '!src/assets/less/*.*'])
+        .pipe(gulp.dest(config.dist)),
     merge(
       gulp.src([
           'vendor/angular/angular.js',
@@ -118,21 +122,26 @@ gulp.task('copy-static', function() {
   );
 });
 
+
 /***** Task: Clean *****/
 gulp.task('clean', function(done) {
   return rimraf(config.dist, done);
 });
 
+
 /***** Task: Lint *****/
-gulp.task('lint', function() {
-  return gulp.src(['src/**/*.js', 'test/unit/**/*.js']).pipe(jshint())
+gulp.task('lint', ['clean'], function() {
+  return gulp.src('src/**/*.js')
+    .pipe(jshint())
     .pipe(jshint.reporter('default'))
     .pipe(jshint.reporter('fail'));
 });
 
+
 /***** Task: Watch *****/
 gulp.task('watch', ['lint', 'build'], function() {
   livereload.listen(12345);
+
   gulp.watch('src/**/*.js', ['lint', 'build-js']);
   gulp.watch('src/**/*.tpl.html', ['build-js']);
   gulp.watch('src/index.html', ['build-index']);
@@ -146,24 +155,22 @@ gulp.task('watch', ['lint', 'build'], function() {
     ])
     .on('change', livereload.changed);
 });
+/*
+ * TODO: watch shouldn't break on errors
+ */
+
 
 /***** Task: Build *****/
 gulp.task('build', [
-  'clean',
   'copy-static',
   'build-index',
   'build-js',
   'build-css'
 ]);
 
+
 /***** Task: Default *****/
 gulp.task('default', [
   'lint',
-  'test',
   'build'
 ]);
-
-/*
-TODO:
-- watch shouldn't break on errors
- */
