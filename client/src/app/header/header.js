@@ -1,4 +1,5 @@
 angular.module('app')
+
 .controller('HeaderCtrl', [
            '$scope','$location','$route',
   function ($scope,  $location,  $route) {
@@ -15,7 +16,7 @@ angular.module('app')
     $scope.breadcrumbs = [
       {
         name: 'item1',
-        path: 'item1/'
+        path: 'dashboard/'
       },
       {
         name: 'item2',

@@ -113,7 +113,8 @@ gulp.task('copy-static', function() {
     merge(
       gulp.src([
           'vendor/angular/angular.js',
-          'vendor/angular-route/angular-route.js'
+          // 'vendor/angular-route/angular-route.js'
+          'vendor/angular-ui-router/release/angular-ui-router.js'
         ])
         .pipe(concat('angular.js')),
       gulp.src('vendor/angular-bootstrap/ui-bootstrap-tpls.js'),
@@ -156,9 +157,6 @@ gulp.task('watch', ['lint', 'build'], function() {
     ])
     .on('change', livereload.changed);
 });
-/*
- * TODO: watch shouldn't break on errors
- */
 
 
 /***** Task: Build *****/
