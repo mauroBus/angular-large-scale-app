@@ -114,7 +114,8 @@ gulp.task('copy-static', function() {
       gulp.src([
           'vendor/angular/angular.js',
           // 'vendor/angular-route/angular-route.js'
-          'vendor/angular-ui-router/release/angular-ui-router.js'
+          'vendor/angular-ui-router/release/angular-ui-router.js',
+          'vendor/angular-animate/angular-animate.js'
         ])
         .pipe(concat('angular.js')),
       gulp.src('vendor/angular-bootstrap/ui-bootstrap-tpls.js'),

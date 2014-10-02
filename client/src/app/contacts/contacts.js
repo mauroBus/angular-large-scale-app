@@ -20,7 +20,7 @@ angular.module('contacts', [
           // Example of loading a template from a file. This is also a top level state,
           // so this template file will be loaded and then inserted into the ui-view
           // within index.html.
-          templateUrl: '/contacts/contacts.html',
+          templateUrl: 'contacts/contacts.html',
 
           // Use `resolve` to resolve any asynchronous controller dependencies
           // *before* the controller is instantiated. In this case, since contacts
@@ -188,7 +188,7 @@ angular.module('contacts', [
             // essentially swapping out the template that 'contacts.detail.item' had
             // inserted with this state's template.
             '@contacts.detail': {
-              templateUrl: 'app/contacts/contacts.detail.item.edit.html',
+              templateUrl: 'contacts/detail/item/edit/edit.html',
               controller: ['$scope', '$stateParams', '$state', 'utils',
                 function (  $scope,   $stateParams,   $state,   utils) {
                   $scope.item = utils.findById($scope.contact.items, $stateParams.itemId);
