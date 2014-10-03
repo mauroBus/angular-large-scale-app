@@ -56,13 +56,13 @@ gulp.task('build-js', function() {
 
   return merge(
       gulp.src('src/**/*.js'),
-      gulp.src('src/app/**/*.tpl.html')
+      gulp.src('src/app/**/*.html')
           .pipe(htmlmin(htmlMinOpts))
           .pipe(templateCache({
             standalone: true,
             module: 'templates.app'
           })),
-      gulp.src('src/common/**/*.tpl.html')
+      gulp.src('src/common/**/*.html')
           .pipe(htmlmin(htmlMinOpts))
           .pipe(templateCache({
             standalone: true,

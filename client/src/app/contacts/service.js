@@ -4,7 +4,7 @@ angular.module('contacts.service', [
 
 // A RESTful factory for retrieving contacts from 'contacts.json'
 .factory('contacts', ['$http', function($http, utils) {
-  var path = 'mocks/contacts.json';
+  var path = '../mocks/contacts.json';
 
   // var contacts = $http.get(path).then(function(resp) {
   //   return resp.data.contacts;
